@@ -1,304 +1,102 @@
-# Project Setup Complete! 🎉
+# DocuSwarm Project Summary
 
-## Multi-Agent QA System for Financial Documents
-**Independent Project Build Summary**
+## Overview
 
----
+DocuSwarm is a multi-agent QA system for financial reports. It ingests PDF filings, extracts multimodal content (text + tables), indexes chunks in ChromaDB, and answers analytical queries through a routed LangGraph workflow.
 
-## ✅ What Was Created
+The current validated setup uses Amazon 2022 10-K data and supports both single-query and batch-query execution.
 
-### 📁 Directory Structure (31 directories)
-```
-DocuSwarm/
-├── configs/          # YAML configuration files
-├── data/             # Data storage (raw, processed, cache, ChromaDB)
-├── docs/             # Comprehensive documentation (7 files)
-├── examples/         # Example queries and outputs
-├── notebooks/        # Jupyter notebooks (ready for experiments)
-├── reports/          # Final submission report + diagrams
-├── scripts/          # Utility scripts (to be implemented)
-├── src/              # Source code structure
-│   ├── task1_chunking/    # Document processing
-│   ├── task2_agents/      # Multi-agent system
-│   ├── utils/             # Utilities
-│   └── pipeline/          # Orchestration
-└── tests/            # Test suite structure
-```
+## Current Implementation Status
 
-### 📄 Documentation Files (7)
+### Implemented and Working
 
-1. **README.md** - Main project documentation with quick start
-2. **docs/ARCHITECTURE.md** - System design, LangGraph workflow, component interactions
-3. **docs/TASK1_CHUNKING.md** - Document parsing, chunking strategies, storage
-4. **docs/TASK2_AGENTS.md** - Multi-agent system, LangGraph implementation
-5. **docs/AGENT_SPECS.md** - Detailed specifications for all 6 agents
-6. **docs/EVALUATION.md** - Evaluation criteria, metrics, test queries
-7. **docs/SETUP.md** - Installation guide, API setup, troubleshooting
-8. **docs/API_COSTS.md** - Cost tracking, usage monitoring, optimization
-
-### ⚙️ Configuration Files (4)
-
-1. **configs/groq.yaml** - Groq LLM settings, models, rate limits
-2. **configs/agents.yaml** - Agent configurations, hand-off rules
-3. **configs/chromadb.yaml** - Vector database settings, retrieval params
-4. **configs/llamaparse.yaml** - Document parsing configuration
-
-### 🔧 Setup Files
-
-1. **requirements.txt** - All Python dependencies (50+ packages)
-2. **.env.example** - Environment variable template
-3. **.gitignore** - Python project ignore patterns
-4. **setup.py** - Package installation configuration
-
-### 📋 Example Files
-
-1. **examples/example_queries.json** - 70+ test queries with expected outputs
-2. **reports/REPORT.md** - Comprehensive submission report template
-
----
-
-## 🚀 Next Steps
-
-### 1. Environment Setup
-
-```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Setup environment variables
-cp .env.example .env
-# Edit .env and add your API keys
-```
-
-### 2. Get API Keys
-
-- **Groq API**: https://console.groq.com (Required)
-- **LlamaParse**: https://llamaparse.ai (Required)
-- **Tavily Search**: https://tavily.com (Optional)
-
-### 3. Implement Core Components
-
-Priority order:
-1. **Document Parsers** (src/task1_chunking/parsers/)
-   - llamaparse_handler.py
-   - pymupdf_parser.py
-   - table_extractor.py
-
-2. **Chunking Logic** (src/task1_chunking/chunkers/)
-   - semantic_chunker.py
-   - structure_aware.py
-   - multimodal_chunker.py
-
-3. **ChromaDB Integration** (src/task1_chunking/storage/)
-   - chromadb_manager.py
-   - embedding_handler.py
-   - retriever.py
-
-4. **Agent Implementations** (src/task2_agents/agents/)
-   - information_agent.py
-   - table_agent.py
-   - math_agent.py
-   - web_search_agent.py
-   - summarization_agent.py
-   - aggregator_agent.py
-
-5. **LangGraph Workflow** (src/task2_agents/core/)
-   - langgraph_workflow.py
-   - state_schema.py
-   - memory_manager.py
-
-6. **Orchestration** (src/pipeline/)
-   - orchestrator.py
-   - query_handler.py
-   - logger.py
-
-7. **Utilities** (src/utils/)
-   - groq_client.py
-   - logging_utils.py
-   - config.py
-
-8. **Scripts** (scripts/)
-   - preprocess_documents.py
-   - setup_chromadb.py
-   - run_pipeline.py
-   - evaluate.py
-
-### 4. Testing
-
-```bash
-# Run tests
-pytest tests/
-
-# Test specific components
-pytest tests/test_agents.py -v
-
-# With coverage
-pytest --cov=src tests/
-```
-
-### 5. Documentation to Add
-
-- [ ] Architecture diagrams (reports/diagrams/)
-- [ ] Performance statistics (reports/statistics/)
-- [ ] Usage examples (notebooks/)
-
----
-
-## 📊 Technology Stack
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| Multi-Agent Framework | LangGraph | Graph-based orchestration |
-| LLM Provider | Groq | Fast inference with Llama 3.3 70B |
-| Vector Database | ChromaDB | Document storage & retrieval |
-| Document Parsing | LlamaParse + PyMuPDF | Complex layout parsing |
-| Embeddings | Nomic Embed Text | Text embeddings via Groq |
-
----
-
-## 📚 Key Documentation Highlights
-
-### ARCHITECTURE.md
-- High-level system design
-- LangGraph state graph structure
-- Data flow diagrams
-- Memory management approach
-
-### TASK1_CHUNKING.md
-- Document parsing strategies (LlamaParse + PyMuPDF)
-- Multimodal chunking (text + tables + figures)
-- ChromaDB schema and indexing
-- Hybrid retrieval (semantic + keyword)
-
-### TASK2_AGENTS.md
-- 6 specialized agents with clear responsibilities
+- End-to-end preprocessing pipeline:
+  - PDF parsing via LlamaParse (with PyMuPDF fallback path in code)
+  - Multimodal chunk generation
+  - ChromaDB indexing with custom embedding adapter
+- Multi-agent query pipeline:
+  - Information Agent
+  - Table Agent
+  - Math Agent
+  - Web Search Agent
+  - Summarization Agent
+  - Aggregator Agent
 - LangGraph workflow with conditional routing
-- State management and hand-off mechanisms
-- Execution flow examples
+- CLI scripts:
+  - `scripts/preprocess_documents.py`
+  - `scripts/run_pipeline.py`
+- JSON trace capture and batch output export
 
-### AGENT_SPECS.md
-- Detailed specifications for each agent
-- Tools, prompts, and hand-off conditions
-- Input/output schemas
-- Error handling strategies
+### Recently Resolved Runtime Issues
 
-### EVALUATION.md
-- 5 evaluation criteria implementation
-- Test query sets (70+ queries)
-- Performance benchmarks
-- Automated evaluation scripts
+- Chroma embedding function compatibility with newer Chroma interface:
+  - Added `__call__(input=...)`, `name()`, `embed_query()`, `embed_documents()`
+- Missing utility exports:
+  - Added `call_groq_llm` in `src/utils/groq_client.py`
+  - Added `get_trace_logger` and `setup_logging` in `src/utils/logging_utils.py`
+- LangGraph message coercion issue:
+  - Removed message-specific annotations from non-message state fields
+- Batch runner compatibility:
+  - `scripts/run_pipeline.py` now supports grouped query JSON format directly
 
-### SETUP.md
-- Complete installation guide
-- API key setup instructions
-- Configuration management
-- Troubleshooting common issues
+## Observed Results (from `output/batch_results.json`)
 
-### API_COSTS.md
-- Cost tracking implementation
-- Usage monitoring scripts
-- Optimization strategies
-- Budget recommendations
+- Total queries executed: **21**
+- Average confidence score: **~0.83**
+- Runs with explicit errors: **0**
+- Queries using table extraction: **21/21**
+- Queries using math branch: **7/21**
+- Queries using web search branch: **6/21**
 
----
+Most frequent workflow patterns:
 
-## 🎯 Evaluation Criteria Coverage
+1. `information_agent -> table_agent -> aggregator_agent`
+2. `information_agent -> table_agent -> math_agent -> web_search_agent -> aggregator_agent`
 
-✅ **Pipeline Explainability**: JSON trace logging implemented
-✅ **Memory Management**: 3-level memory (short/medium/long-term)
-✅ **Error Handling**: Comprehensive fallback strategies
-✅ **Multimodal Reasoning**: Text + tables + figures support
-✅ **Complex Query Handling**: Multi-hop reasoning with agent coordination
+## Repository Reality Check
 
----
+### Active, Relevant Directories
 
-## 📈 Expected Performance
+- `src/` - application code
+- `scripts/` - runnable entry points
+- `configs/` - runtime configs
+- `examples/` - query sets
+- `data/` - source docs + vector DB files
+- `output/` - generated run outputs
+- `docs/` - technical docs
 
-| Metric | Target | Implementation Ready |
-|--------|--------|---------------------|
-| Response Time | <8s (complex) | ✅ Architecture supports |
-| Accuracy | >95% | ✅ Design optimized for |
-| Cache Hit Rate | ~30% | ✅ Caching layer planned |
-| Error Recovery | >95% | ✅ Fallbacks implemented |
+## How to Run
 
----
+### 1) Preprocess data
 
-## 📝 Implementation Checklist
+```bash
+python scripts/preprocess_documents.py --input data/Amazon/AMAZON_2022_10K.pdf --reset
+```
 
-### Core Functionality
-- [ ] Document parsing with LlamaParse
-- [ ] Fallback to PyMuPDF
-- [ ] Semantic chunking
-- [ ] ChromaDB indexing
-- [ ] LangGraph workflow setup
-- [ ] All 6 agents implemented
-- [ ] State management
-- [ ] Memory checkpointing
+### 2) Run a single query
 
-### Features
-- [ ] Hybrid retrieval (semantic + keyword)
-- [ ] Query caching
-- [ ] Conversation history
-- [ ] Error handling & fallbacks
-- [ ] Trace logging
-- [ ] Cost tracking
+```bash
+python scripts/run_pipeline.py --query "What was Amazon's total net sales in 2022?"
+```
 
-### Testing
-- [ ] Unit tests for each agent
-- [ ] Integration tests
-- [ ] Test with example queries
-- [ ] Performance benchmarks
-- [ ] Evaluation scripts
+### 3) Run batch queries
 
-### Documentation
-- [ ] Architecture diagrams
-- [ ] Performance statistics
-- [ ] Usage examples in notebooks
-- [ ] Final report completion
+```bash
+python scripts/run_pipeline.py --batch examples/example_queries.json --verbose
+```
 
----
+## Practical Notes
 
-## 🎓 Learning Resources
+- You do not need to rebuild chunks after every `git pull` unless you reset/delete ChromaDB or intentionally re-index with different chunking logic.
+- If LlamaParse quota is exhausted, switch to:
 
-- **LangGraph Tutorial**: https://langchain-ai.github.io/langgraph/tutorials/
-- **Groq Documentation**: https://console.groq.com/docs
-- **ChromaDB Guide**: https://docs.trychroma.com
-- **LlamaParse Docs**: https://llamaparse.ai/docs
+```bash
+python scripts/preprocess_documents.py --input data/Amazon --parser pymupdf --reset
+```
 
----
+## Next High-Impact Improvements
 
-## 📞 Support
-
-- **Support**:
-  - Review documentation in `docs/`
-  - Open an issue in your project repository
-
-- **Documentation**: See `docs/` directory for detailed guides
-- **Issues**: Check SETUP.md troubleshooting section
-
----
-
-## 🎉 Summary
-
-You now have a **complete, production-ready project structure** with:
-- ✅ 31 directories organized by functionality
-- ✅ 7 comprehensive documentation files (60+ pages)
-- ✅ 4 configuration files (YAML)
-- ✅ Complete Python package structure
-- ✅ 70+ example test queries
-- ✅ Ready-to-implement code architecture
-- ✅ Detailed implementation guide
-
-**Total Files Created**: 34 core files
-**Documentation Pages**: ~100 pages of detailed docs
-**Time to Implementation**: Architecture and design complete, ready for coding!
-
----
-
-**Happy Coding! 🚀**
-
-For questions, refer to the comprehensive documentation in the `docs/` directory.
+1. **Reduce repeated model load overhead** in embedding path by using a singleton/shared model instance.
+2. **Tighten retrieval-to-math handoff quality** so fewer math queries depend on web fallback.
+3. **Add compact evaluation script** to compute exact-match/contains metrics against `expected_answer_contains` in examples.
+4. **Add tighter answer-format constraints** in aggregation prompts to reduce overly generic narrative responses.
