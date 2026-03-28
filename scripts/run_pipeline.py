@@ -93,6 +93,39 @@ def run_batch_queries(batch_file: str, verbose: bool = False):
 
         queries = data.get("queries", [])
 
+        # Backward-compatible support for grouped query files
+        if not queries:
+            grouped_keys = [
+                "simple_queries",
+                "calculation_queries",
+                "multi_section_queries",
+                "temporal_comparison_queries",
+                "external_data_queries",
+                "multimodal_queries",
+                "conversational_queries",
+                "edge_case_queries",
+            ]
+
+            for key in grouped_keys:
+                section_items = data.get(key, [])
+                if not isinstance(section_items, list):
+                    continue
+
+                for item in section_items:
+                    if isinstance(item, dict) and item.get("query"):
+                        queries.append({"query": item["query"], "category": key})
+                    elif isinstance(item, dict) and isinstance(
+                        item.get("conversation"), list
+                    ):
+                        for turn in item["conversation"]:
+                            if isinstance(turn, dict) and turn.get("query"):
+                                queries.append(
+                                    {
+                                        "query": turn["query"],
+                                        "category": f"{key}_conversation",
+                                    }
+                                )
+
         if not queries:
             log_error("No queries found in batch file")
             return
