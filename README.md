@@ -1,324 +1,130 @@
-# Multi-Agent QA System for Financial Documents
+# DocuSwarm: Multi-Agent Financial Report QA
 
-**Inter IIT Tech Meet 14.0 - PrepaTHON 2025 | IIT(BHU)**
+DocuSwarm is a production-style, multi-agent question-answering system for long financial documents (for example, annual reports and 10-K filings). It combines document parsing, multimodal chunking, vector retrieval, and agent orchestration to answer analytical queries with traceable execution.
 
-A hierarchical multi-agent system for answering complex queries on financial documents using LangGraph, Groq, and ChromaDB.
+## What it does
 
----
+- Parses PDF financial reports with a primary/fallback parser strategy.
+- Extracts and chunks text + table-heavy sections for retrieval.
+- Stores embeddings in ChromaDB for semantic search.
+- Routes each query through specialized agents (retrieval, table, math, web, summarization, aggregation).
+- Produces structured traces so each answer can be audited.
 
-## Problem Statement
+## Core stack
 
-Financial documents (annual reports, earnings statements, regulatory filings) are long, complex, and multimodal. This project builds a system that can:
+- LangGraph: multi-agent orchestration and state transitions
+- Groq: LLM inference for reasoning and response generation
+- ChromaDB: vector storage and retrieval
+- LlamaParse + PyMuPDF: document parsing (primary + fallback)
+- SentenceTransformers (`all-MiniLM-L6-v2`): local embedding backend
 
-1. **Parse and structure financial documents** (Task 1)
-   - Handle multimodal content (text, tables, figures)
-   - Chunk documents while preserving context
-   - Store chunks optimally for retrieval
+## Repository structure
 
-2. **Answer complex queries using multi-agent coordination** (Task 2)
-   - Dynamic agent hand-offs based on query requirements
-   - Explainable reasoning with transparent logs
-   - Memory management for efficient query handling
-
----
-
-## Technology Stack
-
-| Component | Technology | Purpose |
-|-----------|-----------|---------|
-| **Multi-Agent Framework** | LangGraph | Graph-based agent orchestration with state management |
-| **LLM Provider** | Groq | Fast inference with Llama 3.3 70B |
-| **Vector Database** | ChromaDB | Lightweight, efficient document storage & retrieval |
-| **Document Parsing** | LlamaParse + PyMuPDF | Complex layout parsing with fallback support |
-| **Embeddings** | Nomic Embed Text (via Groq) | Text embeddings for semantic search |
-
----
-
-## Project Structure
-
-```
-prepathon-ps/
-├── README.md                          # This file
-├── docs/                              # Comprehensive documentation
-│   ├── ARCHITECTURE.md                # System architecture & design
-│   ├── TASK1_CHUNKING.md             # Document processing approach
-│   ├── TASK2_AGENTS.md               # Multi-agent system design
-│   ├── AGENT_SPECS.md                # Detailed agent specifications
-│   ├── EVALUATION.md                 # Evaluation criteria & metrics
-│   ├── SETUP.md                      # Installation & setup guide
-│   └── API_COSTS.md                  # Cost tracking & optimization
-│
-├── src/                               # Source code
-│   ├── task1_chunking/               # Document processing (Task 1)
-│   │   ├── parsers/                  # PDF, table, figure parsing
-│   │   ├── chunkers/                 # Chunking strategies
-│   │   └── storage/                  # ChromaDB integration
-│   ├── task2_agents/                 # Multi-agent system (Task 2)
-│   │   ├── core/                     # LangGraph workflow
-│   │   ├── agents/                   # Specialized agents
-│   │   ├── tools/                    # Agent tools
-│   │   └── prompts/                  # Agent prompts
-│   ├── utils/                        # Utilities
-│   └── pipeline/                     # End-to-end orchestration
-│
-├── configs/                           # Configuration files
-│   ├── agents.yaml                   # Agent configurations
-│   ├── groq.yaml                     # Groq LLM settings
-│   ├── chromadb.yaml                 # Vector DB settings
-│   └── llamaparse.yaml               # Document parsing settings
-│
-├── data/                              # Data directory
-│   ├── raw/Amazon/                   # Raw 10-K reports (2015-2022)
-│   ├── processed/                    # Processed chunks
-│   ├── chromadb/                     # Vector database files
-│   └── cache/                        # Cached results
-│
-├── notebooks/                         # Jupyter notebooks
-│   ├── 01_document_parsing_test.ipynb
-│   ├── 02_chunking_experiments.ipynb
-│   ├── 03_chromadb_indexing.ipynb
-│   ├── 04_langgraph_workflow.ipynb
-│   └── 05_evaluation.ipynb
-│
-├── tests/                             # Test suite
-├── examples/                          # Example queries & outputs
-├── reports/                           # Final submission report
-└── scripts/                           # Utility scripts
+```text
+.
+├── configs/
+├── data/
+│   ├── Amazon/
+│   ├── chromadb/
+│   └── processed/
+├── docs/
+├── examples/
+│   └── example_queries.json
+├── output/
+│   └── batch_results.json
+├── scripts/
+│   ├── preprocess_documents.py
+│   └── run_pipeline.py
+└── src/
+    ├── task1_chunking/
+    ├── task2_agents/
+    ├── pipeline/
+    └── utils/
 ```
 
----
+## Quick start
 
-## Quick Start
-
-### 1. Installation
+1) Install dependencies
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd prepathon-ps
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Environment Setup
+2) Configure environment
 
 ```bash
-# Copy environment template
 cp .env.example .env
-
-# Edit .env and add your API keys:
-# - GROQ_API_KEY=your_groq_api_key
-# - LLAMAPARSE_API_KEY=your_llamaparse_api_key
+# set: GROQ_API_KEY, LLAMAPARSE_API_KEY, TAVILY_API_KEY
 ```
 
-### 3. Process Documents (Task 1)
+3) Preprocess documents (single file or directory)
 
 ```bash
-# Parse and chunk financial documents
-python scripts/preprocess_documents.py --input data/raw/Amazon --output data/processed
+# Single PDF
+python scripts/preprocess_documents.py --input data/Amazon/AMAZON_2022_10K.pdf --reset
 
-# Index chunks in ChromaDB
-python scripts/setup_chromadb.py --chunks data/processed/chunks
+# Or a directory
+python scripts/preprocess_documents.py --input data/Amazon --reset
 ```
 
-### 4. Run Query System (Task 2)
+Optional parser switch:
 
 ```bash
-# Start the multi-agent query system
-python scripts/run_pipeline.py --query "Compare YoY revenue growth between 2021 and 2022"
+python scripts/preprocess_documents.py --input data/Amazon --parser pymupdf --reset
 ```
 
-Or use Python API:
+4) Run queries
 
-```python
-from src.pipeline.orchestrator import QueryOrchestrator
+```bash
+# Single query
+python scripts/run_pipeline.py --query "What was Amazon's total net sales in 2022?"
 
-# Initialize system
-orchestrator = QueryOrchestrator()
+# Batch from JSON
+python scripts/run_pipeline.py --batch examples/example_queries.json --verbose
 
-# Run query
-result = orchestrator.query(
-    "Compare the YoY revenue growth and R&D spending between 2021 and 2022"
-)
-
-# View results
-print(result["final_answer"])
-print(result["trace"])  # Detailed execution log
+# Interactive mode
+python scripts/run_pipeline.py --interactive
 ```
 
----
+## Current observed project status
 
-## System Architecture
+Based on `output/batch_results.json`:
 
-### Task 1: Document Processing Pipeline
+- Total batch queries executed: 21
+- Average confidence score: ~0.83
+- Runs with explicit errors: 0
+- Queries using table extraction: 21/21
+- Queries using web search: 6/21
+- Queries using math agent: 7/21
+- Most common workflow: `information_agent -> table_agent -> aggregator_agent`
 
+Interpretation:
+
+- Retrieval/table extraction path is stable and frequently used.
+- Math/web branches are active for comparative and calculation prompts.
+- End-to-end pipeline runs successfully on batch mode.
+
+## Notes and caveats
+
+- If LlamaParse credits are exhausted, use `--parser pymupdf`.
+- First run can be slower due to model caching/downloads.
+- If `git pull` fails with local changes, stash first:
+
+```bash
+git stash push -m "temp"
+git pull origin main
+git stash pop
 ```
-Raw PDF → LlamaParse → Extract Text/Tables/Figures → Chunking → ChromaDB
-              ↓
-         PyMuPDF (fallback)
-```
-
-**Key Features:**
-- Multimodal content extraction (text, tables, charts)
-- Structure-aware chunking preserving context
-- Hybrid retrieval (semantic + keyword search)
-
-### Task 2: Multi-Agent Workflow (LangGraph)
-
-```
-User Query → Information Agent → Table Agent → Math Agent → Aggregator Agent → Final Answer
-                    ↓                              ↓
-            Web Search Agent                  Summarization Agent
-```
-
-**Agent Coordination:**
-- Dynamic hand-offs based on query requirements
-- Shared state across all agents
-- Memory management for conversation history
-- Transparent reasoning logs (JSON trace)
-
----
-
-## Example Query
-
-**Input:**
-```
-"Compare the YoY revenue growth and R&D spending between 2021 and 2022, 
-and summarize the risks affecting future revenue."
-```
-
-**Output:**
-```json
-{
-  "query": "Compare the YoY revenue growth...",
-  "final_answer": "Amazon's revenue grew 21.7% YoY (2021→2022)...",
-  "trace": [
-    {
-      "agent": "InformationAgent",
-      "tool": "chromadb_search",
-      "input": "revenue 2021 2022",
-      "output": "Retrieved 5 relevant chunks",
-      "handoff_to": "TableAgent"
-    },
-    {
-      "agent": "TableAgent",
-      "tool": "table_parser",
-      "input": "Extract revenue values from table",
-      "output": "2021: $469.8B, 2022: $514.0B",
-      "handoff_to": "MathAgent"
-    },
-    ...
-  ]
-}
-```
-
----
-
-## Evaluation Criteria
-
-The system is evaluated on:
-
-1. **Pipeline Explainability** - Clear agent/tool contribution logs
-2. **Memory Management** - Efficient caching and context reuse
-3. **Error Handling** - Graceful fallback strategies
-4. **Multimodal Reasoning** - Accurate processing of text, tables, figures
-5. **Complex Query Handling** - Multi-hop reasoning across documents
-
-See [docs/EVALUATION.md](docs/EVALUATION.md) for detailed metrics.
-
----
-
-## Documentation
-
-Comprehensive documentation is available in the `docs/` directory:
-
-- **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** - System design & component interactions
-- **[TASK1_CHUNKING.md](docs/TASK1_CHUNKING.md)** - Document processing strategy
-- **[TASK2_AGENTS.md](docs/TASK2_AGENTS.md)** - Multi-agent system design
-- **[AGENT_SPECS.md](docs/AGENT_SPECS.md)** - Detailed agent specifications
-- **[EVALUATION.md](docs/EVALUATION.md)** - Evaluation metrics & benchmarks
-- **[SETUP.md](docs/SETUP.md)** - Detailed installation guide
-- **[API_COSTS.md](docs/API_COSTS.md)** - API usage & cost tracking
-
----
-
-## Dataset
-
-**Amazon 10-K Reports (2015-2022)**
-- Located in `data/raw/Amazon/`
-- 8 annual reports totaling ~1000 pages
-- Includes financial tables, risk factors, MD&A sections
-
-Additional datasets supported:
-- FinanceBench
-- Financial Q&A - 10k dataset
-
----
 
 ## Development
 
-### Running Tests
+Useful commands:
 
 ```bash
-# Run all tests
 pytest tests/
-
-# Run specific test suite
-pytest tests/test_agents.py
-
-# Run with coverage
-pytest --cov=src tests/
+python -m compileall src scripts
 ```
-
-### Jupyter Notebooks
-
-```bash
-# Start Jupyter
-jupyter notebook
-
-# Open notebooks in notebooks/ directory
-```
-
----
-
-## Submission
-
-This project is submitted for Inter IIT Tech Meet 14.0 PrepaTHON.
-
-**Deliverables:**
-- ✅ Complete codebase with documentation
-- ✅ Detailed approach report in `reports/REPORT.md`
-- ✅ Architecture diagrams in `reports/diagrams/`
-- ✅ Performance statistics in `reports/statistics/`
-- ✅ Usage instructions (this README)
-
----
-
-## Contact
-
-**PrepaTHON 2025 - IIT(BHU)**
-
-- **CM:** Tejbir - 9034705165
-- **Contact:** Bhaagyesh - 7428647019
-- **WhatsApp Community:** [Join Link]
-
----
 
 ## License
 
-This project is developed for Inter IIT Tech Meet 14.0 PrepaTHON competition.
-
----
-
-## Acknowledgments
-
-- **LangGraph** - Agent orchestration framework
-- **Groq** - Fast LLM inference
-- **ChromaDB** - Vector database
-- **LlamaParse** - Document parsing
-- **Inter IIT Tech Meet** - Competition organizers
+This repository currently has no explicit license file. Add one before external distribution.
