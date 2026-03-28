@@ -170,4 +170,4 @@ git stash pop
 
 ## License
 
-No explicit license file. Add one before external distribution.
+This project is licensed under the MIT License. See `LICENSE`.
