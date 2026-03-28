@@ -1,7 +1,6 @@
 """LangGraph state schema for multi-agent system"""
 
-from typing import TypedDict, List, Dict, Optional, Annotated
-from langgraph.graph import add_messages
+from typing import TypedDict, List, Dict, Optional
 
 
 class AgentState(TypedDict):
@@ -26,10 +25,10 @@ class AgentState(TypedDict):
     agent_history: List[str]
 
     # Trace & Logging
-    trace: Annotated[List[Dict], add_messages]
+    trace: List[Dict]
 
     # Memory
-    conversation_history: Annotated[List[Dict], add_messages]
+    conversation_history: List[Dict]
     cached_results: Dict
 
     # Output

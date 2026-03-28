@@ -101,6 +101,14 @@ class GroqEmbeddings:
         """Generate embeddings for texts"""
         return self.model.encode(input).tolist()
 
+    def embed_documents(self, texts: List[str]) -> List[List[float]]:
+        """LangChain/Chroma compatibility for document embeddings."""
+        return self.model.encode(texts).tolist()
+
+    def embed_query(self, input: str) -> List[float]:
+        """LangChain/Chroma compatibility for query embedding."""
+        return self.model.encode(input).tolist()
+
     def name(self) -> str:
         """Return the name of the embedding function"""
         return "sentence-transformers-all-MiniLM-L6-v2"
