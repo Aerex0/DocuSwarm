@@ -1,7 +1,7 @@
 # Project Setup Complete! 🎉
 
 ## Multi-Agent QA System for Financial Documents
-**Inter IIT Tech Meet 14.0 - PrepaTHON 2025**
+**Independent Project Build Summary**
 
 ---
 
@@ -9,7 +9,7 @@
 
 ### 📁 Directory Structure (31 directories)
 ```
-prepathon-ps/
+DocuSwarm/
 ├── configs/          # YAML configuration files
 ├── data/             # Data storage (raw, processed, cache, ChromaDB)
 ├── docs/             # Comprehensive documentation (7 files)
@@ -273,9 +273,9 @@ pytest --cov=src tests/
 
 ## 📞 Support
 
-- **PrepaTHON Contact**: 
-  - Tejbir: 9034705165
-  - Bhaagyesh: 7428647019
+- **Support**:
+  - Review documentation in `docs/`
+  - Open an issue in your project repository
 
 - **Documentation**: See `docs/` directory for detailed guides
 - **Issues**: Check SETUP.md troubleshooting section

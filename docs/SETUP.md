@@ -19,7 +19,7 @@ Complete guide to setting up the multi-agent financial QA system.
 
 ```bash
 git clone <repository-url>
-cd prepathon-ps
+cd DocuSwarm
 ```
 
 ### 2. Create Virtual Environment
@@ -420,7 +420,7 @@ jupyter notebook
 ### Build Image
 
 ```bash
-docker build -t prepathon-financial-qa .
+docker build -t docuswarm-financial-qa .
 ```
 
 ### Run Container
@@ -430,7 +430,7 @@ docker run -it \
   -v $(pwd)/data:/app/data \
   -e GROQ_API_KEY=$GROQ_API_KEY \
   -e LLAMAPARSE_API_KEY=$LLAMAPARSE_API_KEY \
-  prepathon-financial-qa
+  docuswarm-financial-qa
 ```
 
 ---
@@ -450,7 +450,7 @@ After setup:
 
 - **Documentation**: See `docs/` directory
 - **Issues**: Check troubleshooting section
-- **Contact**: Refer to README.md for PrepaTHON contacts
+- **Contact**: Refer to repository maintainers in README.md
 
 ---
 

@@ -9,14 +9,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     ]
 
 setup(
-    name="prepathon-financial-qa",
+    name="docuswarm-financial-qa",
     version="1.0.0",
-    author="PrepaTHON Team",
+    author="DocuSwarm Contributors",
     author_email="team@example.com",
     description="Multi-Agent QA System for Financial Documents",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-username/prepathon-ps",
+    url="https://github.com/Aerex0/DocuSwarm",
     packages=find_packages(where="src"),
     package_dir={"": "src"},
     classifiers=[

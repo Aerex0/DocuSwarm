@@ -2,8 +2,8 @@ Here's the full content of the PDF:
 
 ---
 
-**INTER IIT TECH MEET 14.0 PREPATHON PS — NATURAL LANGUAGE PROCESSING**
-CM: Tejbir (9034705165) | PREPATHON 2025 | IIT(BHU)
+**NATURAL LANGUAGE PROCESSING PROJECT BRIEF**
+Project context document
 
 ---
 

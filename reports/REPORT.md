@@ -2,7 +2,7 @@
 
 **Multi-Agent QA System for Financial Documents**
 
-**Inter IIT Tech Meet 14.0 - PrepaTHON 2025 | IIT(BHU)**
+**Independent Technical Report**
 
 ---
 
@@ -456,4 +456,4 @@ See `reports/statistics/` for detailed test results and metrics.
 
 **Repository URL**: [To be filled]
 
-**Contact**: See README.md for PrepaTHON contact information
+**Contact**: See repository README for project maintainers

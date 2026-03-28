@@ -220,7 +220,7 @@ information_agent → table_agent → math_agent → web_search_agent → summar
 ## File Structure Overview
 
 ```
-prepathon-ps/
+DocuSwarm/
 ├── src/
 │   ├── task1_chunking/          # Document processing (Task 1)
 │   │   ├── parsers/             # LlamaParse + PyMuPDF

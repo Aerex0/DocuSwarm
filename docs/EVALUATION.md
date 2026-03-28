@@ -1,6 +1,6 @@
 # Evaluation Criteria & Metrics
 
-This document describes how the system is evaluated based on the PrepaTHON problem statement criteria.
+This document describes how the system is evaluated against core production criteria for financial QA systems.
 
 ---
 
