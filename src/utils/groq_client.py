@@ -90,7 +90,7 @@ class GroqClient:
 
 
 class GroqEmbeddings:
-    """Embeddings function for ChromaDB"""
+    """Embeddings function for ChromaDB (v0.4.16+ compatible)"""
 
     def __init__(self):
         from sentence_transformers import SentenceTransformer
@@ -98,5 +98,9 @@ class GroqEmbeddings:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
     def __call__(self, input: List[str]) -> List[List[float]]:
-        """Generate embeddings for texts (ChromaDB v0.4.16+ compatible)"""
+        """Generate embeddings for texts"""
         return self.model.encode(input).tolist()
+
+    def name(self) -> str:
+        """Return the name of the embedding function"""
+        return "sentence-transformers-all-MiniLM-L6-v2"
