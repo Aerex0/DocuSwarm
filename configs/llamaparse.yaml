@@ -1,0 +1,41 @@
+parser:
+  api_key_env: LLAMAPARSE_API_KEY
+  result_type: "markdown"
+  
+  features:
+    use_vendor_multimodal_model: true
+    vendor_multimodal_model_name: "anthropic-sonnet-3.5"
+    extract_tables: true
+    extract_figures: true
+    preserve_structure: true
+
+parsing_instruction: |
+  This is a financial 10-K report. Please:
+  1. Preserve section hierarchy (Item 1, Item 1A, etc.)
+  2. Extract all tables with headers and data cells
+  3. Identify charts, figures, and diagrams with captions
+  4. Maintain page numbers for reference
+  5. Preserve financial data precision (all decimal places)
+
+timeouts:
+  max_timeout: 300
+  polling_interval: 5
+
+retry:
+  max_retries: 3
+  retry_delay: 10
+
+fallback:
+  enable_pymupdf: true
+  fallback_on_error: true
+  fallback_on_timeout: true
+
+output:
+  save_markdown: true
+  save_json: true
+  output_dir: "./data/processed"
+
+logging:
+  log_api_calls: true
+  log_pages_processed: true
+  verbose: false

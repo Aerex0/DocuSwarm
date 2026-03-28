@@ -1,0 +1,38 @@
+provider: groq
+base_url: https://api.groq.com/openai/v1
+
+models:
+  reasoning: llama-3.3-70b-versatile
+  embedding: nomic-embed-text
+  fallback: llama-3.1-8b-instant
+
+parameters:
+  temperature: 0.1
+  max_tokens: 8000
+  top_p: 0.95
+  frequency_penalty: 0.0
+  presence_penalty: 0.0
+
+api_key_env: GROQ_API_KEY
+
+rate_limits:
+  requests_per_minute: 30
+  tokens_per_minute: 14400
+  retry_attempts: 3
+  retry_delay: 2
+
+timeout:
+  default: 30
+  embedding: 10
+  completion: 60
+
+fallback:
+  enabled: true
+  fallback_model: llama-3.1-8b-instant
+  fallback_on_error: true
+  fallback_on_timeout: true
+
+logging:
+  log_requests: true
+  log_responses: false
+  log_tokens: true

@@ -1,0 +1,151 @@
+agents:
+  information_agent:
+    name: "Information Retrieval Agent"
+    description: "Fetches relevant document chunks from ChromaDB"
+    
+    tools:
+      - chromadb_search
+      - keyword_search
+      - hybrid_search
+    
+    parameters:
+      top_k: 10
+      similarity_threshold: 0.7
+      use_hybrid_search: true
+      semantic_weight: 0.7
+    
+    handoff_to:
+      - table_agent
+      - math_agent
+      - web_search_agent
+      - summarization_agent
+    
+    timeout: 10
+    max_retries: 2
+  
+  table_agent:
+    name: "Table Processing Agent"
+    description: "Extracts and processes tabular data"
+    
+    tools:
+      - table_parser
+      - column_selector
+      - llm_extract_table
+    
+    parameters:
+      extraction_method: "llm"
+      preserve_formatting: true
+      validate_data: true
+    
+    handoff_to:
+      - math_agent
+      - aggregator_agent
+    
+    timeout: 15
+    max_retries: 2
+  
+  math_agent:
+    name: "Math & Analysis Agent"
+    description: "Performs calculations and statistical analysis"
+    
+    tools:
+      - calculator
+      - yoy_growth
+      - percentage_change
+      - financial_ratio
+      - stats_analysis
+    
+    parameters:
+      precision: 2
+      units_display: true
+      show_formula: true
+    
+    handoff_to:
+      - aggregator_agent
+    
+    timeout: 10
+    max_retries: 2
+  
+  web_search_agent:
+    name: "Web Search Agent"
+    description: "Retrieves external information"
+    
+    tools:
+      - tavily_search
+      - duckduckgo_search
+    
+    parameters:
+      max_results: 5
+      search_depth: "basic"
+      fallback_enabled: true
+    
+    handoff_to:
+      - aggregator_agent
+    
+    timeout: 20
+    max_retries: 3
+  
+  summarization_agent:
+    name: "Summarization Agent"
+    description: "Condenses text-based content"
+    
+    tools:
+      - llm_summarize
+      - extractive_summary
+    
+    parameters:
+      max_length: 300
+      method: "llm"
+      preserve_facts: true
+    
+    handoff_to:
+      - aggregator_agent
+    
+    timeout: 15
+    max_retries: 2
+  
+  aggregator_agent:
+    name: "Aggregator Agent"
+    description: "Compiles final answer from all results"
+    
+    tools:
+      - llm_answer_generation
+    
+    parameters:
+      include_sources: true
+      confidence_scoring: true
+      format: "detailed"
+    
+    handoff_to: null
+    
+    timeout: 20
+    max_retries: 2
+
+workflow:
+  entry_point: information_agent
+  
+  conditional_edges:
+    information_agent:
+      insufficient_info: web_search_agent
+      has_tables: table_agent
+      requires_calculation: math_agent
+      default: summarization_agent
+    
+    table_agent:
+      requires_calculation: math_agent
+      default: aggregator_agent
+  
+  direct_edges:
+    - [math_agent, aggregator_agent]
+    - [web_search_agent, aggregator_agent]
+    - [summarization_agent, aggregator_agent]
+
+memory:
+  checkpointer: memory
+  max_conversation_turns: 10
+  clear_on_exit: false
+
+logging:
+  trace_enabled: true
+  verbose: true
+  log_file: logs/agents.log

@@ -1,0 +1,51 @@
+storage:
+  path: ./data/chromadb
+  collection_name: financial_documents
+  persistent: true
+  
+settings:
+  anonymized_telemetry: false
+  allow_reset: true
+  chroma_db_impl: "duckdb+parquet"
+  chroma_api_impl: "local"
+
+collection:
+  metadata:
+    description: "Amazon 10-K financial reports 2015-2022"
+    chunking_strategy: "multimodal"
+    embedding_model: "nomic-embed-text"
+    indexed_date: "2025-03-28"
+
+embedding:
+  model: nomic-embed-text
+  provider: groq
+  dimension: 768
+  normalize: true
+
+retrieval:
+  distance_metric: "cosine"
+  default_top_k: 10
+  max_top_k: 50
+  
+  filters:
+    enable_metadata_filter: true
+    default_filters: {}
+  
+  hybrid_search:
+    enabled: true
+    semantic_weight: 0.7
+    keyword_weight: 0.3
+
+indexing:
+  batch_size: 100
+  show_progress: true
+  validate_embeddings: true
+
+performance:
+  cache_size_mb: 100
+  max_concurrent_requests: 10
+
+logging:
+  log_queries: true
+  log_results: false
+  log_level: "INFO"

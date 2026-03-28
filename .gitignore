@@ -1,0 +1,114 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Environment Variables
+.env
+.env.local
+.env.*.local
+
+# Data
+data/chromadb/
+data/cache/
+data/processed/
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Test Coverage
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.tox/
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Ruff
+.ruff_cache/
+
+# Documentation builds
+docs/_build/
+site/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+.DS_Store
+
+# API Keys (double-check)
+**/credentials.json
+**/api_keys.json
+**/*_secret*
+
+# Large files
+*.pdf
+*.docx
+*.xlsx
+# Exception: Keep sample files
+!data/raw/**/*.pdf
+
+# ChromaDB
+chroma.sqlite3
+chroma-embeddings.parquet
+chroma-collections.sqlite3
+
+# Model files
+models/
+*.pth
+*.pt
+*.onnx
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
