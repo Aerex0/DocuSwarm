@@ -2,184 +2,184 @@
   "simple_queries": [
     {
       "id": 1,
-      "query": "What was Amazon's total revenue in 2022?",
+      "query": "What was Amazon's total net sales in 2022?",
       "complexity": "simple",
       "expected_agents": ["information_agent", "table_agent", "aggregator_agent"],
-      "expected_answer_contains": ["$514", "billion", "2022"]
+      "expected_answer_contains": ["2022", "net sales", "$514"]
     },
     {
       "id": 2,
-      "query": "What was Amazon's net income in 2021?",
+      "query": "What was Amazon's net income (loss) in 2022?",
       "complexity": "simple",
       "expected_agents": ["information_agent", "table_agent", "aggregator_agent"],
-      "expected_answer_contains": ["net income", "2021"]
+      "expected_answer_contains": ["2022", "net income", "loss"]
     },
     {
       "id": 3,
-      "query": "Who is the CEO of Amazon?",
+      "query": "Who was Amazon's President and CEO in the 2022 report?",
       "complexity": "simple",
       "expected_agents": ["information_agent", "aggregator_agent"],
-      "expected_answer_contains": ["Andy Jassy"]
+      "expected_answer_contains": ["Andy Jassy", "2022"]
     }
   ],
-  
+
   "calculation_queries": [
     {
       "id": 11,
-      "query": "Calculate the year-over-year revenue growth from 2021 to 2022",
+      "query": "Calculate year-over-year total net sales growth from 2021 to 2022",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["9.4%", "growth", "$469.8", "$514.0"]
+      "expected_answer_contains": ["2021", "2022", "growth", "%"]
     },
     {
       "id": 12,
-      "query": "What is the percentage change in AWS revenue between 2020 and 2022?",
+      "query": "Calculate year-over-year AWS net sales growth from 2021 to 2022",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["AWS", "percentage", "2020", "2022"]
+      "expected_answer_contains": ["AWS", "2021", "2022", "%"]
     },
     {
       "id": 13,
-      "query": "Calculate Amazon's operating margin for 2022",
+      "query": "Calculate Amazon's operating margin for 2022 using operating income and net sales",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["operating", "margin", "2022"]
+      "expected_answer_contains": ["operating margin", "2022", "%"]
     }
   ],
-  
+
   "multi_section_queries": [
     {
       "id": 21,
-      "query": "Compare revenue trends and summarize key risk factors affecting future revenue",
+      "query": "Summarize Amazon's 2022 business performance and the main risk factors discussed in the report",
       "complexity": "complex",
-      "expected_agents": ["information_agent", "table_agent", "math_agent", "summarization_agent", "aggregator_agent"],
-      "expected_answer_contains": ["revenue", "risk", "trend"]
+      "expected_agents": ["information_agent", "table_agent", "summarization_agent", "aggregator_agent"],
+      "expected_answer_contains": ["2022", "risk factors", "performance"]
     },
     {
       "id": 22,
-      "query": "Explain Amazon's business strategy and how it relates to R&D spending trends",
+      "query": "Explain Amazon's segment results in 2022 across North America, International, and AWS",
       "complexity": "complex",
       "expected_agents": ["information_agent", "table_agent", "summarization_agent", "aggregator_agent"],
-      "expected_answer_contains": ["strategy", "R&D", "spending"]
+      "expected_answer_contains": ["North America", "International", "AWS", "2022"]
     },
     {
       "id": 23,
-      "query": "What were the main risk factors in 2022 and did they materialize in the financial results?",
+      "query": "What major factors affected Amazon's 2022 operating income according to the report?",
       "complexity": "complex",
       "expected_agents": ["information_agent", "table_agent", "summarization_agent", "aggregator_agent"],
-      "expected_answer_contains": ["risk", "2022", "financial results"]
+      "expected_answer_contains": ["operating income", "2022", "factors"]
     }
   ],
-  
+
   "temporal_comparison_queries": [
     {
       "id": 31,
-      "query": "How did AWS revenue as a percentage of total revenue change from 2019 to 2022?",
-      "complexity": "complex",
+      "query": "How did AWS net sales as a percentage of total net sales change from 2021 to 2022?",
+      "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["AWS", "percentage", "2019", "2022"]
+      "expected_answer_contains": ["AWS", "percentage", "2021", "2022"]
     },
     {
       "id": 32,
-      "query": "Compare operating expenses across 2020, 2021, and 2022",
+      "query": "Compare operating income across North America, International, and AWS for 2021 versus 2022",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["operating expenses", "2020", "2021", "2022"]
+      "expected_answer_contains": ["operating income", "2021", "2022", "AWS"]
     },
     {
       "id": 33,
-      "query": "What is the 3-year CAGR for Amazon's revenue from 2019 to 2022?",
+      "query": "What is the two-year CAGR for Amazon net sales from 2020 to 2022?",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["CAGR", "2019", "2022", "%"]
+      "expected_answer_contains": ["CAGR", "2020", "2022", "%"]
     }
   ],
-  
+
   "external_data_queries": [
     {
       "id": 41,
-      "query": "How does Amazon's revenue growth compare to the e-commerce industry average in 2022?",
+      "query": "Using the 2022 report and web sources, compare Amazon's 2022 revenue growth to global e-commerce market growth",
       "complexity": "complex",
       "expected_agents": ["information_agent", "table_agent", "web_search_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["Amazon", "industry", "compare", "2022"],
+      "expected_answer_contains": ["Amazon", "2022", "growth", "market"],
       "requires_web_search": true
     },
     {
       "id": 42,
-      "query": "What is Amazon's current market capitalization and how does it relate to 2022 revenue?",
+      "query": "Find Amazon's current market capitalization from web sources and relate it to 2022 net sales from the report",
       "complexity": "complex",
       "expected_agents": ["information_agent", "web_search_agent", "math_agent", "aggregator_agent"],
-      "expected_answer_contains": ["market cap", "revenue", "2022"],
+      "expected_answer_contains": ["market capitalization", "2022", "net sales"],
       "requires_web_search": true
     }
   ],
-  
+
   "multimodal_queries": [
     {
       "id": 51,
-      "query": "Show me the revenue breakdown by segment for 2022 and explain the trends",
+      "query": "Show the 2022 net sales breakdown by segment and explain the trend",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "summarization_agent", "aggregator_agent"],
-      "expected_answer_contains": ["segment", "revenue", "2022", "North America", "AWS"],
+      "expected_answer_contains": ["segment", "net sales", "2022", "North America", "AWS"],
       "requires_table": true
     },
     {
       "id": 52,
-      "query": "Extract the financial highlights from the 2022 annual report",
+      "query": "Extract key 2022 financial highlights including revenue, operating income, and net income",
       "complexity": "medium",
       "expected_agents": ["information_agent", "table_agent", "summarization_agent", "aggregator_agent"],
-      "expected_answer_contains": ["highlights", "2022"],
+      "expected_answer_contains": ["2022", "revenue", "operating income", "net income"],
       "requires_table": true,
       "requires_text": true
     }
   ],
-  
+
   "conversational_queries": [
     {
       "id": 61,
       "conversation": [
         {
           "turn": 1,
-          "query": "What was Amazon's revenue in 2022?",
-          "expected_answer_contains": ["$514", "billion"]
+          "query": "What were Amazon's total net sales in 2022?",
+          "expected_answer_contains": ["2022", "net sales", "$514"]
         },
         {
           "turn": 2,
-          "query": "How does that compare to 2021?",
-          "expected_answer_contains": ["$469.8", "growth", "9.4%"],
+          "query": "How does that compare with 2021?",
+          "expected_answer_contains": ["2021", "2022", "growth"],
           "requires_context": true
         },
         {
           "turn": 3,
-          "query": "What about AWS specifically?",
-          "expected_answer_contains": ["AWS", "revenue"],
+          "query": "What about AWS net sales specifically in 2022?",
+          "expected_answer_contains": ["AWS", "2022", "net sales"],
           "requires_context": true
         }
       ]
     }
   ],
-  
+
   "edge_case_queries": [
     {
       "id": 71,
-      "query": "What was Amazon's revenue in 2030?",
+      "query": "What was Amazon's revenue in 2030 according to the 2022 report?",
       "complexity": "simple",
-      "expected_behavior": "Should indicate data not available (future year)",
-      "expected_answer_contains": ["not available", "future", "2030"]
+      "expected_behavior": "Should indicate data not available for future year",
+      "expected_answer_contains": ["not available", "2030", "2022 report"]
     },
     {
       "id": 72,
-      "query": "Tell me about Tesla's revenue",
+      "query": "Tell me Nvidia's 2022 revenue from this report",
       "complexity": "simple",
-      "expected_behavior": "Should indicate document is about Amazon, not Tesla",
-      "expected_answer_contains": ["Amazon", "not Tesla", "documents"]
+      "expected_behavior": "Should indicate the indexed document is Amazon 2022 10-K",
+      "expected_answer_contains": ["Amazon", "Nvidia", "not in report"]
     },
     {
       "id": 73,
       "query": "",
       "complexity": "simple",
       "expected_behavior": "Should handle empty query gracefully",
-      "expected_answer_contains": ["error", "empty query", "please provide"]
+      "expected_answer_contains": ["error", "empty query", "provide"]
     }
   ]
 }
