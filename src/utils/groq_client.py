@@ -97,6 +97,6 @@ class GroqEmbeddings:
 
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
 
-    def __call__(self, texts: List[str]) -> List[List[float]]:
-        """Generate embeddings for texts"""
-        return self.model.encode(texts).tolist()
+    def __call__(self, input: List[str]) -> List[List[float]]:
+        """Generate embeddings for texts (ChromaDB v0.4.16+ compatible)"""
+        return self.model.encode(input).tolist()
