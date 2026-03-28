@@ -4,7 +4,7 @@ import json
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from src.utils.config import config
 
 # Setup logging
@@ -14,6 +14,13 @@ logging.basicConfig(
 )
 
 logger = logging.getLogger(__name__)
+_trace_logger: Optional["TraceLogger"] = None
+
+
+def setup_logging(level: Optional[str] = None):
+    """Configure root logging once for scripts."""
+    log_level = level or config.log_level
+    logging.getLogger().setLevel(getattr(logging, log_level, logging.INFO))
 
 
 class TraceLogger:
@@ -74,9 +81,20 @@ class TraceLogger:
         self.trace = []
 
 
-def log_error(error: Exception, context: str = ""):
+def get_trace_logger() -> TraceLogger:
+    """Return a singleton trace logger instance."""
+    global _trace_logger
+    if _trace_logger is None:
+        _trace_logger = TraceLogger()
+    return _trace_logger
+
+
+def log_error(error: Any, context: str = ""):
     """Log error with context"""
-    logger.error(f"Error in {context}: {str(error)}", exc_info=True)
+    if isinstance(error, Exception):
+        logger.error(f"Error in {context}: {str(error)}", exc_info=True)
+    else:
+        logger.error(f"Error in {context}: {str(error)}")
 
 
 def log_info(message: str):
