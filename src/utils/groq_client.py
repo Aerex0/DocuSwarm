@@ -104,3 +104,18 @@ class GroqEmbeddings:
     def name(self) -> str:
         """Return the name of the embedding function"""
         return "sentence-transformers-all-MiniLM-L6-v2"
+
+
+def call_groq_llm(
+    prompt: str,
+    model: Optional[str] = None,
+    temperature: Optional[float] = None,
+    max_tokens: Optional[int] = None,
+) -> str:
+    """Convenience wrapper used by agents to call Groq LLM."""
+    client = GroqClient(
+        model=model,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return client.invoke(prompt)
