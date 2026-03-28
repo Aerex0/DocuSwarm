@@ -84,3 +84,16 @@ class Config:
 
 # Global config instance
 config = Config()
+
+
+def load_config(config_path: str) -> Dict[str, Any]:
+    """Load a YAML config file from absolute or project-relative path."""
+    path = Path(config_path)
+    if not path.is_absolute():
+        path = config.project_root / config_path
+
+    if not path.exists():
+        return {}
+
+    with open(path, "r") as f:
+        return yaml.safe_load(f) or {}
