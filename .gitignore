@@ -78,6 +78,9 @@ dmypy.json
 docs/_build/
 site/
 
+# Local audit notes
+reports/CODE_AUDIT.md
+
 # Temporary files
 *.tmp
 *.bak
