@@ -25,11 +25,6 @@ retry:
   max_retries: 3
   retry_delay: 10
 
-fallback:
-  enable_pymupdf: true
-  fallback_on_error: true
-  fallback_on_timeout: true
-
 output:
   save_markdown: true
   save_json: true
