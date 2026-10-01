@@ -46,10 +46,18 @@ class Config:
 
         # Model settings
         self.model_reasoning = os.getenv(
-            "GROQ_MODEL_REASONING", "llama-3.3-70b-versatile"
+            "GROQ_MODEL_REASONING", "openai/gpt-oss-120b"
         )
         self.model_embedding = os.getenv("GROQ_MODEL_EMBEDDING", "nomic-embed-text")
-        self.model_fallback = os.getenv("GROQ_MODEL_FALLBACK", "llama-3.1-8b-instant")
+        self.model_fallback = os.getenv("GROQ_MODEL_FALLBACK", "openai/gpt-oss-20b")
+
+        # GPT-OSS emits chain-of-thought in a separate field and bills those
+        # tokens against max_tokens, so the budget must cover reasoning plus the
+        # answer. Verified needed: an 800-token cap returns empty content.
+        self.is_reasoning_model = self.model_reasoning.startswith("openai/gpt-oss")
+        self.min_reasoning_max_tokens = int(
+            os.getenv("MIN_REASONING_MAX_TOKENS", "4096")
+        )
 
         # LLM parameters
         self.temperature = float(os.getenv("TEMPERATURE", "0.1"))

@@ -1,7 +1,7 @@
 """Groq API client wrapper"""
 
 import os
-from typing import List, Dict, Optional
+from typing import Any, List, Dict, Optional
 from langchain_groq import ChatGroq
 from groq import Groq
 from tenacity import retry, stop_after_attempt, wait_exponential
@@ -25,7 +25,14 @@ class GroqClient:
         self.temperature = (
             temperature if temperature is not None else config.temperature
         )
-        self.max_tokens = max_tokens or config.max_tokens
+
+        # Reasoning models bill chain-of-thought against max_tokens; a caller
+        # asking for 800 tokens can end up with an empty answer. Clamp upward.
+        requested = max_tokens or config.max_tokens
+        if config.is_reasoning_model:
+            self.max_tokens = max(requested, config.min_reasoning_max_tokens)
+        else:
+            self.max_tokens = requested
 
         # Initialize LangChain Groq chat
         self.chat = ChatGroq(
@@ -38,6 +45,29 @@ class GroqClient:
         # Initialize native Groq client for embeddings
         self.client = Groq(api_key=self.api_key)
 
+    @staticmethod
+    def _extract_content(response: Any) -> str:
+        """
+        Return answer text from a chat response.
+
+        Reasoning models can return empty content when the token budget is
+        consumed by reasoning, so fall back to the reasoning field rather than
+        handing callers an empty string.
+        """
+        content = (getattr(response, "content", None) or "").strip()
+        if content:
+            return content
+
+        reasoning = (
+            getattr(response, "reasoning_content", None)
+            or getattr(response, "additional_kwargs", {}).get("reasoning_content")
+            or ""
+        )
+        if isinstance(reasoning, str) and reasoning.strip():
+            return reasoning.strip()
+
+        return content
+
     @retry(
         stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=2, max=10)
     )
@@ -45,7 +75,7 @@ class GroqClient:
         """Invoke Groq LLM with retry logic"""
         try:
             response = self.chat.invoke(prompt)
-            return response.content
+            return self._extract_content(response)
         except Exception as e:
             if "rate_limit" in str(e).lower():
                 # Try fallback model
@@ -56,7 +86,7 @@ class GroqClient:
                     max_tokens=self.max_tokens,
                 )
                 response = fallback_chat.invoke(prompt)
-                return response.content
+                return self._extract_content(response)
             raise e
 
     @retry(
