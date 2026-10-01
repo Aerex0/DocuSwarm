@@ -10,9 +10,6 @@ from src.utils.logging_utils import log_info, log_error
 class SummarizationAgent:
     """Agent for summarizing retrieved information and preparing concise answers"""
 
-    def __init__(self):
-        self.model = "llama-3.3-70b-versatile"
-
     def __call__(self, state: AgentState) -> AgentState:
         """Execute summarization"""
         log_info("SummarizationAgent: Summarizing information")
@@ -140,9 +137,7 @@ Provide your summary now:"""
         try:
             summary = call_groq_llm(
                 prompt=prompt,
-                model=self.model,
                 temperature=0.3,
-                max_tokens=800,
             )
 
             return summary.strip()

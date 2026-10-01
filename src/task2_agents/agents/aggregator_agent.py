@@ -10,9 +10,6 @@ from src.utils.logging_utils import log_info, log_error
 class AggregatorAgent:
     """Agent for compiling final answer from all agent outputs"""
 
-    def __init__(self):
-        self.model = "llama-3.3-70b-versatile"
-
     def __call__(self, state: AgentState) -> AgentState:
         """Execute final answer aggregation"""
         log_info("AggregatorAgent: Compiling final answer")
@@ -167,9 +164,7 @@ Provide your final answer now:"""
         try:
             answer = call_groq_llm(
                 prompt=prompt,
-                model=self.model,
                 temperature=0.2,
-                max_tokens=1000,
             )
             return answer.strip()
 

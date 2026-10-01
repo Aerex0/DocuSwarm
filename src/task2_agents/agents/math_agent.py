@@ -11,9 +11,6 @@ from src.utils.logging_utils import log_info, log_error
 class MathAgent:
     """Agent for performing calculations, YoY growth, ratios, and percentage changes"""
 
-    def __init__(self):
-        self.model = "llama-3.3-70b-versatile"
-
     def __call__(self, state: AgentState) -> AgentState:
         """Execute mathematical calculations"""
         log_info("MathAgent: Performing calculations")
@@ -126,9 +123,7 @@ If you cannot find the required values, return:
         try:
             response = call_groq_llm(
                 prompt=prompt,
-                model=self.model,
                 temperature=0.1,
-                max_tokens=1000,
             )
 
             # Try to parse JSON from response
