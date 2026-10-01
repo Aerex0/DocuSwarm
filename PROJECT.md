@@ -82,7 +82,6 @@ This document is the single source of truth for the entire project — architect
 │                                                                      │
 │   ┌────────────┐    ┌────────────┐    ┌────────────┐                 │
 │   │ LlamaParse │───▶│  Chunking  │───▶│  ChromaDB  │                 │
-│   │ + PyMuPDF  │    │  Strategy  │    │  Indexing  │                 │
 │   └────────────┘    └────────────┘    └────────────┘                 │
 │                                                                      │
 │                 Raw PDF → Extract → Chunk → Embed → Store            │
@@ -99,7 +98,7 @@ This document is the single source of truth for the entire project — architect
 | **LLM Provider** | Groq (Llama 3.3 70B) | 10× faster inference, cost-effective, supports embeddings |
 | **Vector Database** | ChromaDB | Lightweight, persistent, sub-100ms queries, metadata filtering |
 | **Primary Parser** | LlamaParse | Multimodal (tables + figures), accurate layout analysis |
-| **Fallback Parser** | PyMuPDF + Camelot | Free, local, reliable for simple documents |
+
 | **Embeddings** | Groq Nomic Embed | Integrated with Groq infrastructure |
 | **Web Search** | Tavily (primary) / DuckDuckGo (fallback) | AI-optimised search for accurate financial info |
 
@@ -117,17 +116,17 @@ This document is the single source of truth for the entire project — architect
 └─────┬──────┘
       │
       ▼
-┌──────────────────────┐   (failure)   ┌──────────────────────┐
-│   LlamaParse API     │ ─────────────▶│  PyMuPDF Extraction  │
-│  - Table extraction  │               │  - Basic text        │
-│  - Figure detection  │               │  - Simple tables     │
-│  - Layout analysis   │               └──────────┬───────────┘
-└─────┬────────────────┘                          │
-      │ success                                   │
-      ▼                                           │
-┌──────────────────────┐                          │
-│  Structured Output   │  (Markdown + Metadata)   │
-│  - Text sections     │◀─────────────────────────┘
+┌──────────────────────┐
+│   LlamaParse API     │
+│  - Table extraction  │
+│  - Figure detection  │
+│  - Layout analysis   │
+└─────┬────────────────┘
+      │
+      ▼
+┌──────────────────────┐
+│  Structured Output   │  (Markdown + Metadata)
+│  - Text sections     │
 │  - Tables as JSON    │
 │  - Figure references │
 └─────┬────────────────┘
@@ -149,7 +148,7 @@ This document is the single source of truth for the entire project — architect
 └──────────────────────┘
 ```
 
-**LlamaParse** is used as the primary parser for complex financial layouts. If it fails, **PyMuPDF + Camelot** provide a reliable fallback. Both paths feed into the same Structured Output stage.
+**LlamaParse** is the sole parser, chosen for its accuracy on complex financial layouts: multimodal (tables + figures) with layout analysis. There is no fallback parser; a parse failure aborts that document and is reported per-file.
 
 ### 3.2 Chunking Strategies
 
@@ -687,7 +686,7 @@ Output extracted_tables:
 
 | Failure Point | Fallback |
 |--------------|---------|
-| LlamaParse fails | PyMuPDF + Camelot |
+| LlamaParse fails | Skip document, report per-file |
 | ChromaDB empty results | Route to Web Search Agent |
 | Tool execution error | Skip tool, continue workflow |
 | Agent timeout | Move to Aggregator with partial results |

@@ -44,7 +44,7 @@ A two-task approach:
 | Multi-Agent Framework | LangGraph | Graph-based orchestration, state management, conditional routing |
 | LLM Provider | Groq (Llama 3.3 70B) | Fast inference (10x faster), cost-effective |
 | Vector Database | ChromaDB | Lightweight, easy setup, good performance |
-| Document Parsing | LlamaParse + PyMuPDF | High-accuracy table extraction with fallback |
+| Document Parsing | LlamaParse | High-accuracy multimodal table extraction |
 | Embeddings | Nomic Embed Text (Groq) | Quality embeddings, fast generation |
 
 ### System Architecture Diagram
@@ -87,8 +87,7 @@ A two-task approach:
 ### Approach
 
 **Parsing Strategy**:
-1. **Primary**: LlamaParse for complex layouts, tables, figures
-2. **Fallback**: PyMuPDF for simple documents or API failures
+1. **Sole parser**: LlamaParse for complex layouts, tables, figures
 
 **Chunking Strategy** (Three-level approach):
 1. **Semantic Chunking**: Group by embedding similarity
@@ -253,7 +252,7 @@ class AgentState(TypedDict):
 **Strategies Implemented**:
 | Error Type | Fallback | Success Rate |
 |------------|----------|--------------|
-| LlamaParse failure | PyMuPDF | 100% |
+| LlamaParse failure | Skip document, continue batch | n/a |
 | ChromaDB empty | Web search | 87% |
 | Tool error | Skip + continue | 95% |
 | LLM timeout | Retry + fallback model | 98% |
@@ -347,11 +346,10 @@ class AgentState(TypedDict):
 
 ### Challenge 1: Table Extraction Accuracy
 
-**Problem**: PyMuPDF struggled with complex table layouts (70% accuracy)
+**Problem**: Text-only PDF extraction struggled with complex table layouts
 
 **Solution**: 
-- Primary: LlamaParse (92% accuracy)
-- Fallback: PyMuPDF + manual validation
+- LlamaParse multimodal parsing (92% accuracy)
 - Result: 92% table extraction accuracy
 
 ### Challenge 2: Agent Coordination Complexity

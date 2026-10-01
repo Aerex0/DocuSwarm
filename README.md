@@ -6,7 +6,7 @@ DocuSwarm is a production-style, multi-agent question-answering system for long 
 
 ## What it does
 
-- Parses PDF financial reports with a primary/fallback parser strategy
+- Parses PDF financial reports with LlamaParse
 - Extracts and chunks text + table-heavy sections for retrieval
 - Stores embeddings in ChromaDB for semantic and hybrid search
 - Routes each query dynamically through specialized agents (retrieval → table → math → summarization → aggregation)
@@ -19,8 +19,7 @@ DocuSwarm is a production-style, multi-agent question-answering system for long 
 | Multi-agent orchestration | LangGraph |
 | LLM inference & embeddings | Groq (Llama 3.3 70B + Nomic Embed) |
 | Vector storage & retrieval | ChromaDB |
-| Document parsing (primary) | LlamaParse |
-| Document parsing (fallback) | PyMuPDF + Camelot |
+| Document parsing | LlamaParse |
 | Web search | Tavily (fallback: DuckDuckGo) |
 
 ## Repository structure
@@ -64,8 +63,7 @@ DocuSwarm is a production-style, multi-agent question-answering system for long 
 │   │   ├── chunkers/
 │   │   │   └── multimodal_chunker.py
 │   │   ├── parsers/
-│   │   │   ├── llamaparse_handler.py
-│   │   │   └── pymupdf_parser.py
+│   │   │   └── llamaparse_handler.py
 │   │   └── storage/
 │   │       └── chromadb_manager.py
 │   ├── task2_agents/
@@ -115,9 +113,6 @@ python scripts/preprocess_documents.py --input data/Amazon/AMAZON_2022_10K.pdf -
 
 # Entire directory
 python scripts/preprocess_documents.py --input data/Amazon --reset
-
-# Use fallback parser (no LlamaParse credits needed)
-python scripts/preprocess_documents.py --input data/Amazon --parser pymupdf --reset
 ```
 
 **5. Run queries**
@@ -150,7 +145,7 @@ Based on `output/batch_results.json` (21 queries):
 
 ## Notes
 
-- If LlamaParse credits are exhausted, switch to `--parser pymupdf`.
+- Parsing requires a `LLAMAPARSE_API_KEY` and consumes LlamaParse credits; a failed parse aborts that document rather than falling back.
 - The first run may be slower due to model loading and caching.
 
 ## Development

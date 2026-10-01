@@ -223,7 +223,7 @@ information_agent → table_agent → math_agent → web_search_agent → summar
 DocuSwarm/
 ├── src/
 │   ├── task1_chunking/          # Document processing (Task 1)
-│   │   ├── parsers/             # LlamaParse + PyMuPDF
+│   │   ├── parsers/             # LlamaParse
 │   │   ├── chunkers/            # Multimodal chunking
 │   │   └── storage/             # ChromaDB manager
 │   ├── task2_agents/            # Multi-agent system (Task 2)
