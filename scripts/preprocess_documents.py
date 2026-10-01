@@ -8,33 +8,22 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.task1_chunking.parsers.llamaparse_handler import LlamaParseHandler
-from src.task1_chunking.parsers.pymupdf_parser import PyMuPDFParser
 from src.task1_chunking.chunkers.multimodal_chunker import MultimodalChunker
 from src.task1_chunking.storage.chromadb_manager import ChromaDBManager
 from src.utils.logging_utils import log_info, log_error
 
 
-def preprocess_document(pdf_path: str, use_llamaparse: bool = True):
+def preprocess_document(pdf_path: str):
     """
     Preprocess a single document
 
     Args:
         pdf_path: Path to PDF file
-        use_llamaparse: Whether to use LlamaParse (True) or PyMuPDF (False)
     """
     try:
         # Step 1: Parse document
-        if use_llamaparse:
-            try:
-                parser = LlamaParseHandler()
-                parsed_data = parser.parse_document(pdf_path)
-            except Exception as e:
-                log_error(e, context="LlamaParse failed, falling back to PyMuPDF")
-                parser = PyMuPDFParser()
-                parsed_data = parser.parse_document(pdf_path)
-        else:
-            parser = PyMuPDFParser()
-            parsed_data = parser.parse_document(pdf_path)
+        parser = LlamaParseHandler()
+        parsed_data = parser.parse_document(pdf_path)
 
         # Step 2: Chunk document
         chunker = MultimodalChunker()
@@ -56,13 +45,12 @@ def preprocess_document(pdf_path: str, use_llamaparse: bool = True):
         return False
 
 
-def preprocess_directory(directory: str, use_llamaparse: bool = True):
+def preprocess_directory(directory: str):
     """
     Preprocess all PDF files in a directory
 
     Args:
         directory: Path to directory containing PDFs
-        use_llamaparse: Whether to use LlamaParse
     """
     dir_path = Path(directory)
 
@@ -78,7 +66,7 @@ def preprocess_directory(directory: str, use_llamaparse: bool = True):
         return
 
     print(f"\nFound {len(pdf_files)} PDF files to process")
-    print(f"Parser: {'LlamaParse' if use_llamaparse else 'PyMuPDF'}")
+    print("Parser: LlamaParse")
     print("-" * 60)
 
     successful = 0
@@ -86,7 +74,7 @@ def preprocess_directory(directory: str, use_llamaparse: bool = True):
 
     for pdf_file in pdf_files:
         print(f"\nProcessing: {pdf_file.name}")
-        if preprocess_document(str(pdf_file), use_llamaparse):
+        if preprocess_document(str(pdf_file)):
             successful += 1
         else:
             failed += 1
@@ -110,12 +98,6 @@ def main():
     parser = argparse.ArgumentParser(description="Preprocess financial documents")
     parser.add_argument("--input", required=True, help="Input PDF file or directory")
     parser.add_argument(
-        "--parser",
-        default="llamaparse",
-        choices=["llamaparse", "pymupdf"],
-        help="Parser to use (default: llamaparse)",
-    )
-    parser.add_argument(
         "--reset",
         action="store_true",
         help="Reset ChromaDB collection before processing",
@@ -130,15 +112,14 @@ def main():
         db_manager.reset_collection()
         print("✓ Collection reset\n")
 
-    use_llamaparse = args.parser == "llamaparse"
     input_path = Path(args.input)
 
     if input_path.is_file():
         # Process single file
-        preprocess_document(str(input_path), use_llamaparse)
+        preprocess_document(str(input_path))
     elif input_path.is_dir():
         # Process directory
-        preprocess_directory(str(input_path), use_llamaparse)
+        preprocess_directory(str(input_path))
     else:
         print(f"Error: Invalid input path: {args.input}")
         sys.exit(1)
