@@ -41,7 +41,7 @@ import os
 
 try:
     groq_key = os.getenv("GROQ_API_KEY")
-    llama_key = os.getenv("LLAMA_CLOUD_API_KEY")
+    llama_key = os.getenv("LLAMAPARSE_API_KEY")
     tavily_key = os.getenv("TAVILY_API_KEY")
 
     if groq_key:
@@ -50,9 +50,9 @@ try:
         print("   ⚠ GROQ_API_KEY not found")
 
     if llama_key:
-        print(f"   ✓ LLAMA_CLOUD_API_KEY: {llama_key[:20]}...")
+        print(f"   ✓ LLAMAPARSE_API_KEY: {llama_key[:20]}...")
     else:
-        print("   ⚠ LLAMA_CLOUD_API_KEY not found")
+        print("   ⚠ LLAMAPARSE_API_KEY not found")
 
     if tavily_key:
         print(f"   ✓ TAVILY_API_KEY: {tavily_key[:20]}...")
@@ -67,9 +67,7 @@ print("\n3. Testing Groq API connection...")
 try:
     response = call_groq_llm(
         prompt="Say 'Hello' if you can hear me.",
-        model="llama-3.3-70b-versatile",
         temperature=0.1,
-        max_tokens=50,
     )
     print(f"   ✓ Groq API working! Response: {response[:100]}")
 except Exception as e:

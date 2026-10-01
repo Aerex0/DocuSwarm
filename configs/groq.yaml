@@ -2,9 +2,9 @@ provider: groq
 base_url: https://api.groq.com/openai/v1
 
 models:
-  reasoning: llama-3.3-70b-versatile
+  reasoning: openai/gpt-oss-120b
   embedding: nomic-embed-text
-  fallback: llama-3.1-8b-instant
+  fallback: openai/gpt-oss-20b
 
 parameters:
   temperature: 0.1
@@ -28,7 +28,7 @@ timeout:
 
 fallback:
   enabled: true
-  fallback_model: llama-3.1-8b-instant
+  fallback_model: openai/gpt-oss-20b
   fallback_on_error: true
   fallback_on_timeout: true
 
