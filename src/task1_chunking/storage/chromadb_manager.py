@@ -64,6 +64,8 @@ class ChromaDBManager:
                 # Prepare metadata (ChromaDB doesn't support nested dicts)
                 metadata = {
                     "document_id": chunk["document_id"],
+                    "document_name": chunk.get("document_name", ""),
+                    "year": chunk.get("year", ""),
                     "content_type": chunk["content_type"],
                     "section": chunk.get("section", ""),
                     "word_count": chunk.get("word_count", 0),

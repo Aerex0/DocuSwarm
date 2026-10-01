@@ -45,6 +45,14 @@ class MultimodalChunker:
 
         return chunks
 
+    def _document_metadata(self, document_id: str) -> Dict[str, str]:
+        """Derive citation metadata from a document id (e.g. AMAZON_2022_10K)."""
+        year_match = re.search(r"(19|20)\d{2}", document_id)
+        return {
+            "document_name": document_id,
+            "year": year_match.group(0) if year_match else "unknown",
+        }
+
     def _chunk_text(self, text: str, document_id: str) -> List[Dict]:
         """Chunk text with overlap"""
         chunks = []
@@ -70,6 +78,7 @@ class MultimodalChunker:
                         "text": chunk_text,
                         "section": "main",
                         "word_count": len(chunk_text.split()),
+                        **self._document_metadata(document_id),
                     }
                 )
                 chunk_num += 1
@@ -102,6 +111,7 @@ class MultimodalChunker:
                     "text": chunk_text,
                     "section": "main",
                     "word_count": len(chunk_text.split()),
+                    **self._document_metadata(document_id),
                 }
             )
 
@@ -132,6 +142,7 @@ class MultimodalChunker:
                     "table_data": table_data,
                     "section": "table",
                     "word_count": len(chunk_text.split()),
+                    **self._document_metadata(document_id),
                 }
             )
 
