@@ -141,8 +141,11 @@ class WebSearchAgent:
         ]
 
         if any(keyword in query_lower for keyword in calc_keywords):
-            # If we haven't visited math agent, go there
-            if "math_agent" not in state.get("agent_history", []):
+            # Allow one math run per web search. Math may have failed on missing
+            # values that this search just supplied, so a retry is worthwhile -
+            # but capping runs per search keeps math and web from ping-ponging.
+            history = state.get("agent_history", [])
+            if history.count("math_agent") <= history.count("web_search_agent"):
                 return "math_agent"
 
         # Check if we need summarization
