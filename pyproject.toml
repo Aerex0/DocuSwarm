@@ -1,0 +1,76 @@
+[project]
+name = "docuswarm-financial-qa"
+version = "1.0.0"
+description = "Multi-Agent QA System for Financial Documents"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+license = "MIT"
+authors = [{ name = "DocuSwarm Contributors", email = "team@example.com" }]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    # Multi-agent orchestration
+    "langgraph>=0.2.28",
+    "langchain>=0.3.0",
+    "langchain-core>=0.3.0",
+    "langchain-groq>=0.2.0",
+    "langchain-community>=0.3.0",
+    "groq>=0.11.0",
+    # Vector storage and retrieval
+    "chromadb>=0.5.15",
+    "sentence-transformers>=3.0.0",
+    # Document parsing
+    "llama-parse>=0.5.10",
+    "PyMuPDF>=1.24.0",
+    "pdfplumber>=0.11.0",
+    "tabulate>=0.9.0",
+    # Web search
+    "tavily-python>=0.5.0",
+    # Configuration and utilities
+    "python-dotenv>=1.0.0",
+    "pyyaml>=6.0.1",
+    "pydantic>=2.10.0",
+    "pydantic-settings>=2.6.0",
+    "tenacity>=9.0.0",
+    "cachetools>=5.5.0",
+    "typing-extensions>=4.12.0",
+    # Data processing and text processing
+    "numpy>=1.26.0",
+    "pandas>=2.2.0",
+    "nltk>=3.8.0",
+    "tqdm>=4.66.0",
+    # Logging and monitoring
+    "loguru>=0.7.0",
+    "rich>=13.0.0",
+    # HTTP
+    "requests>=2.32.0",
+    "httpx>=0.27.0",
+    "jsonschema>=4.23.0",
+    # Dates
+    "python-dateutil>=2.9.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.24.0",
+    "pytest-cov>=6.0.0",
+    "black>=24.0.0",
+    "ruff>=0.7.0",
+]
+
+[tool.uv]
+# Imports resolve as `src.*` from the repo root (see the sys.path insert in
+# scripts/), so the project is run in place rather than built and installed.
+package = false
+
+[tool.ruff]
+line-length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
