@@ -83,10 +83,9 @@ class MathAgent:
             year = metadata.get("year", "unknown")
             context_parts.append(f"[Chunk {i + 1} - Year {year}]: {content[:500]}")
 
-        # Add table data
+        # Add table data (table_agent stores the parsed JSON object directly)
         for i, table in enumerate(extracted_tables[:3]):
-            table_data = table.get("data", {})
-            context_parts.append(f"[Table {i + 1}]: {str(table_data)[:500]}")
+            context_parts.append(f"[Table {i + 1}]: {str(table)[:500]}")
 
         return "\n\n".join(context_parts)
 
