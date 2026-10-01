@@ -78,7 +78,7 @@ class SummarizationAgent:
         if retrieved_chunks:
             context_parts.append("=== RETRIEVED DOCUMENTS ===")
             for i, chunk in enumerate(retrieved_chunks[:10]):
-                content = chunk.get("content", "")
+                content = chunk.get("text", "")
                 metadata = chunk.get("metadata", {})
                 year = metadata.get("year", "unknown")
                 doc_name = metadata.get("document_name", "unknown")

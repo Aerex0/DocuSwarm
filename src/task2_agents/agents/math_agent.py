@@ -78,7 +78,7 @@ class MathAgent:
 
         # Add text chunks
         for i, chunk in enumerate(retrieved_chunks[:5]):
-            content = chunk.get("content", "")
+            content = chunk.get("text", "")
             metadata = chunk.get("metadata", {})
             year = metadata.get("year", "unknown")
             context_parts.append(f"[Chunk {i + 1} - Year {year}]: {content[:500]}")

@@ -119,7 +119,7 @@ class AggregatorAgent:
         if all_info.get("retrieved_chunks"):
             context_parts.append("=== RETRIEVED INFORMATION ===")
             for i, chunk in enumerate(all_info["retrieved_chunks"][:8]):
-                content = chunk.get("content", "")
+                content = chunk.get("text", "")
                 metadata = chunk.get("metadata", {})
                 year = metadata.get("year", "unknown")
                 context_parts.append(
